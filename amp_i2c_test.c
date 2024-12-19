@@ -101,7 +101,7 @@ unsigned char cmd_file_parse(unsigned char *cmd_buf, unsigned char *data, unsign
 		if (cmd_buf[i] == ' ')
 		{
 			data[lenth] = strtoul(&cmd_buf[i + 1], NULL, 16);
-			printf("data[%d] = 0x%02x\n", lenth, data[lenth]);
+			// printf("data[%d] = 0x%02x\n", lenth, data[lenth]);
 			lenth++;
 		}
 		else
@@ -109,7 +109,6 @@ unsigned char cmd_file_parse(unsigned char *cmd_buf, unsigned char *data, unsign
 			continue;
 		}
 	}
-	// printf("device id = 0x%02x,regadd = 0x%02x,data lenth = %d\n", data[0], data[1], lenth);
 	return lenth;
 }
 int main(int argc, char *argv[])
@@ -203,7 +202,9 @@ int main(int argc, char *argv[])
 				}
 				case 'd':
 				{
-					printf("delay cmd\n");
+					unsigned long int delay = strtoul(&buf[2], NULL, 10);
+					printf("delay %ldms\n", delay);
+					usleep(delay * 1000);
 					break;
 				}
 				}
