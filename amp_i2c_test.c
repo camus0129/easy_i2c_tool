@@ -11,7 +11,7 @@
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
-#define DEBUG_MODE 1
+#define DEBUG_MODE 0
 #define BUS_NUM_PARAM 1
 #define READ_WRITE_PARAM 2
 #define DEVICE_ID 3
@@ -48,6 +48,11 @@ int i2c_write_buf(unsigned char chip_addr, unsigned char reg_addr, unsigned char
 	msg.flags = 0; // write
 	msg.addr = chip_addr;
 	msg.buf = (unsigned char *)malloc(len + 1);
+	if (msg.buf == NULL)
+	{
+		printf("malloc fail\n");
+		return -1;
+	}
 	msg.buf[0] = reg_addr;
 	memcpy(&msg.buf[1], buf, len);
 
@@ -135,6 +140,11 @@ int main(int argc, char *argv[])
 		unsigned char regaddr = strtoul(argv[REGADDR], NULL, 16);
 		unsigned value_len = argc - VALUE_START;
 		unsigned char *buf = malloc(value_len);
+		if (buf == NULL)
+		{
+			printf("malloc fail\n");
+			return -1;
+		}
 		printf("write regaddr 0x%02x value = ", regaddr);
 		for (int i = 0; i < value_len; i++)
 		{
@@ -152,6 +162,11 @@ int main(int argc, char *argv[])
 		unsigned char regaddr = strtoul(argv[REGADDR], NULL, 16);
 		unsigned value_len = strtoul(argv[READ_LEN], NULL, 16);
 		unsigned char *buf = malloc(value_len);
+		if (buf == NULL)
+		{
+			printf("malloc fail\n");
+			return -1;
+		}
 		printf("read regaddr 0x%02x value = ", regaddr);
 		i2c_read_buf(device_id, regaddr, buf, value_len);
 		for (int i = 0; i < value_len; i++)
@@ -198,6 +213,11 @@ int main(int argc, char *argv[])
 					unsigned char data[MAX_CMD_DATA_LENTH] = {0};
 					unsigned lenth = cmd_file_parse(&buf[1], data, strlen(buf));
 					unsigned char *read_buf = malloc(data[lenth - 1]);
+					if (read_buf == NULL)
+					{
+						printf("malloc fail\n");
+						return -1;
+					}
 #if !DEBUG_MODE
 					i2c_read_buf(data[0] / 2, data[1], read_buf, data[lenth - 1]);
 #endif
