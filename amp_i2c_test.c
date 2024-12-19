@@ -11,7 +11,7 @@
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 
-#define DEBUG_MODE 0
+#define DEBUG_MODE 1
 #define BUS_NUM_PARAM 1
 #define READ_WRITE_PARAM 2
 #define DEVICE_ID 3
@@ -54,6 +54,7 @@ int i2c_write_buf(unsigned char chip_addr, unsigned char reg_addr, unsigned char
 	ret = ioctl(amp_fd, I2C_RDWR, (unsigned long)&work_queue);
 	if (ret < 0)
 		printf("error during I2C_RDWR ioctl with error code %d\n", ret);
+	free(msg.buf);
 	return ret;
 }
 
@@ -142,6 +143,7 @@ int main(int argc, char *argv[])
 		}
 		printf("\n");
 		i2c_write_buf(device_id, regaddr, buf, value_len);
+		free(buf);
 	}
 	else if (!strcmp(argv[READ_WRITE_PARAM], "r"))
 	{
@@ -157,6 +159,7 @@ int main(int argc, char *argv[])
 			printf("0x%02x ", buf[i]);
 		}
 		printf("\n");
+		free(buf);
 	}
 	else if (!strcmp(argv[READ_WRITE_PARAM], "-f"))
 	{
@@ -198,6 +201,7 @@ int main(int argc, char *argv[])
 #if !DEBUG_MODE
 					i2c_read_buf(data[0] / 2, data[1], read_buf, data[lenth - 1]);
 #endif
+					free(read_buf);
 					break;
 				}
 				case 'd':
