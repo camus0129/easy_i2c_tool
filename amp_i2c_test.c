@@ -10,7 +10,7 @@
 #include <string.h>
 #include "i2c_driver.h"
 
-#define DEBUG_MODE 1
+#define DEBUG_MODE 0
 #define BUS_NUM_PARAM 1
 #define READ_WRITE_PARAM 2
 #define DEVICE_ID 3
